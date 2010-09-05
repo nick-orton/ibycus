@@ -2,4 +2,4 @@
   :description "FIXME: write"
   :dependencies [[org.clojure/clojure "1.2.0"]
                  [org.clojure/clojure-contrib "1.2.0"]
-                 [techne "0.4.0"]])
+                 [techne "0.5.0-SNAPSHOT"]])
