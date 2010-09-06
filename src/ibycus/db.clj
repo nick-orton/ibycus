@@ -3,11 +3,9 @@
 
 
 (let [db-name  "ibycus"]
-  (def db {:classname   "org.h2.Driver" ; must be in classpath
+  (def db {:classname   "org.h2.Driver" 
            :subprotocol "h2"
            :subname (str "file:~/.h2data/" db-name)
-           ; Any additional keys are passed to the driver
-           ; as driver-specific properties.
            :user     "sa"
            :password ""}))
 
