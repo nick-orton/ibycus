@@ -15,7 +15,7 @@
           (ref-set prev follower)
           (add-to-vocab vocab word follower))))))
 
-(defn read-seq
+(defn words->vocab
   [words vocab]
   (reduce 
     (into-vocab (first words)) {}
