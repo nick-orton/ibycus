@@ -28,7 +28,7 @@
 
 (defn string->words
   [s]
-  (filter #(not (empty? %)) (str/split s #"[\s+\d*]")))  
+  (filter #(not (empty? %)) (str/split s #"[\s+\d*\(\)]")))  
 
 (defn file->vocab
   [file]

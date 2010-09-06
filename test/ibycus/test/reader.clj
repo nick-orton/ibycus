@@ -12,5 +12,6 @@
 (deftest test-string-to-words
   (is (= ["a" "bc"] (string->words "a bc")))
   (is (= ["a" "bc"] (string->words "a 123  bc")))
+  (is (= ["a" "bc"] (string->words "a (bc)")))
          
          )
