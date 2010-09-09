@@ -1,12 +1,8 @@
  (ns ibycus.reader
    (:use [techne.bag])
    (:require [clojure.contrib.str-utils2 :as str]
-             [techne.files :as files]))
-
-(defn- vocab+
-  [vocab word follower]
-  (let [bag (get vocab word {})]
-       (assoc vocab word (put bag follower))))
+             [techne.files :as files]
+             [ibycus.vocab :as vocab]))
 
 (defn ref-set? 
   ;TODO: no
@@ -22,7 +18,7 @@
       (let [prev (ref (first words))]
         (fn [vocab follower]
           (dosync 
-            (vocab+ vocab (ref-set? prev follower) follower))))
+            (vocab/add vocab (ref-set? prev follower) follower))))
       {}
       (rest words)))
 
