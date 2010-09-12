@@ -3,7 +3,7 @@
 
 (defn add
   [vocab word follower]
-  (let [bag (get vocab word {})]
+  (let [bag (get vocab word (bag/create))]
        (assoc vocab word (bag/put bag follower))))
 
 

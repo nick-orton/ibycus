@@ -1,5 +1,4 @@
  (ns ibycus.reader
-   (:use [techne.bag])
    (:require [clojure.contrib.str-utils2 :as str]
              [techne.files :as files]
              [ibycus.vocab :as vocab]))
