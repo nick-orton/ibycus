@@ -5,7 +5,8 @@
 
 (defn string->words
   [s]
-  (filter #(not (empty? %)) (str/split s #"[\s+\d*\(\)]")))  
+  ;TODO toLowerCase
+  (filter #(not (empty? %)) (str/split s #"[\s+\d*\(\),(--):\"\]\[\.*;?'!]")))  
 
 (defn file->vocab
   [file]

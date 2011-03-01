@@ -3,21 +3,16 @@
 
 (defprotocol Vocab
   (add [self word follower])
+  (words [_])
   (add-all [self words]))
-
-(defn- ref-get+set 
-  ;TODO: no
-  "ref-set and return old value"
-  [r value]
-  (let [old (deref r)]
-       (ref-set r value)
-       old))
 
 (defn- vocab-adding-acc [start]
   (let [prev (ref start)]
        (fn [self follower]
-         (dosync 
-           (add self (ref-get+set prev follower) follower)))))
+         (let [prev* (deref prev)]
+              (dosync 
+                (ref-set prev follower)
+                (add self prev* follower))))))
 
 (deftype BagVocab [state]
   Vocab
@@ -29,6 +24,7 @@
     (reduce (vocab-adding-acc (first words)) 
       self
       (rest words)))
+  (words [_] (keys state))
         
   Object
   (toString [_]
