@@ -6,6 +6,7 @@
   (add [self word follower])
   (words [_])
   (add-all [self words])
+  (start-word [_])
   (next-word [self prev]))
 
 (defn- vocab-adding-acc [start]
@@ -27,13 +28,12 @@
       self
       (rest words)))
   (words [_] (keys state))
+  (start-word [_] (rand-nth (keys state)))
   (next-word
     [self prev]
     ;TODO not found case
-    (let [bag (get state prev)
-          pick (math/floor (rand (bag/total bag)))]
-          (nth (bag/->seq bag) pick)
-          ))
+    (let [bag (get state prev)]
+         (rand-nth (bag/->seq bag))))
         
   Object
   (toString [_]
