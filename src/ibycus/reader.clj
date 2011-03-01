@@ -3,7 +3,7 @@
              [techne.files :as files]
              [ibycus.vocab :as vocab]))
 
-(defn ref-set? 
+(defn ref-get+set 
   ;TODO: no
   "ref-set and return old value"
   [r value]
@@ -12,14 +12,18 @@
        old))
 
 (defn words->vocab
-  [words vocab]
+  [words]
     (reduce 
       (let [prev (ref (first words))]
         (fn [vocab follower]
           (dosync 
-            (vocab/add vocab (ref-set? prev follower) follower))))
-      {}
+            (vocab/add vocab (ref-get+set prev follower) follower))))
+      (vocab/create)
       (rest words)))
+
+(defn words->vocab*
+  [words vocab ]
+  (print vocab))
 
 (defn string->words
   [s]
@@ -30,4 +34,4 @@
   (->
     (files/file->string file)
     (string->words)
-    (words->vocab {})))
+    (words->vocab )))
