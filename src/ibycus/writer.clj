@@ -1,15 +1,13 @@
-(ns ibycus.writer)
-
-(defn next-word [prev vocab]
-  "a")
+(ns ibycus.writer
+  (require [ibycus.vocab :as vocab]))
 
 (defn write-poem
-  [num-chars vocab]
+  [vocab size]
   (loop [i 0
-         prev ::START-TOKEN
-         poem []]
-    (let [word (next-word prev vocab)
-          poem+ (conj poem word)]
-      (if (< i num-chars)
-          (recur (inc i) word poem+)
-          poem+))))
+         prev (vocab/start-word vocab)
+         poem [prev]]
+    (let [word (vocab/next-word vocab prev)
+          poem* (conj poem word)]
+         (if (< i size)
+           (recur (inc i) word poem*)
+           poem*))))
