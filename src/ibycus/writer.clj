@@ -1,4 +1,4 @@
-(ns ibycus.core)
+(ns ibycus.writer)
 
 (defn next-word [prev vocab]
   "a")
