@@ -4,10 +4,9 @@
 (defn write-poem
   [vocab size]
   (loop [i 0
-         prev (vocab/start vocab)
-         poem [prev]]
+         poem (vocab/start vocab)]
     (let [word (vocab/next-word vocab poem)
           poem* (conj poem word)]
          (if (< i size)
-           (recur (inc i) word poem*)
+           (recur (inc i) poem*)
            poem*))))

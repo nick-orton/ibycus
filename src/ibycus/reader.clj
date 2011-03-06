@@ -14,3 +14,5 @@
     (files/file->string file)
     (string->words)
     (vocab/words->vocab )))
+
+(def v (file->vocab "vocab/hesiod.txt"))
