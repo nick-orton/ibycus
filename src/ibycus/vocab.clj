@@ -12,7 +12,6 @@
   (acc [self start])
   (add [self ks v])
   (start-chain [chain])
-  (next-link [self key])
   (leaf [self prev]))
 
 
@@ -34,14 +33,11 @@
 (defrecord BagChain1 []
   Chain
     (start-chain [self] [(rand-nth (keys self))])
-    (next-link [self key]
-      (get self key (bag/create)))
-    
     (leaf [self words]
       (get self (last words)))
     (add [self ks v] 
          (let [k (first ks)
-               bag (next-link self k)]
+               bag (get self k (bag/create))]
               (assoc self k (bag/put bag v))))
     (acc 
       [self words]
@@ -50,24 +46,21 @@
              (let [prev* (deref prev)]
                   (dosync 
                     (ref-set prev follower)
-                    (let [bag (next-link self prev* )]
-                         (assoc self prev* (bag/put bag follower)))))))))
+                    (add self '(prev*) follower)))))))
 
 (defn make-bc1 [] (BagChain1.))
 
-(defrecord BagChain2 [size create-link-fun]
+(defrecord MultiChain [size create-link-fun]
   Chain
     (start-chain [self] 
       (let [link (rand-nth (keys self))]
            (vec (cons link (start-chain (get self link))) )))
-    (next-link [self key]
-      (get self key (create-link-fun)))
     (leaf [self words]
-      (let [link (next-link self (first words))]
+      (let [link (get self (first words))]
            (leaf link (rest words))))
     (add [self ks v]
          (let [k (first ks)
-               chain (next-link self k)]
+               chain (get self k (create-link-fun))]
                (assoc self k (add chain (rest ks) v))))
     (acc 
       [self keys]
@@ -78,6 +71,12 @@
                     (ref-set ks (conj (vec (rest ks*)) follower))
                     (add self ks* follower)))))))
 
+(defn create-link-fun-builder [size]
+  (if (= 1 size)
+      (fn [] (BagChain1.))
+      (fn [] (MultiChain. size (create-link-fun-builder (- size 1))))))
+
 (defn words->vocab
    [words]
-   (add-all (BagVocab. (BagChain2. 2 make-bc1)) words))
+   (add-all (BagVocab. (MultiChain. 2 make-bc1)) words))
+   ;(add-all (BagVocab. ((create-link-fun-builder 2))) words))
