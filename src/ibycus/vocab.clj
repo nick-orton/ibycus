@@ -10,6 +10,7 @@
 
 (defprotocol Chain
   (acc [self start])
+  (add [self ks v])
   (start-chain [chain])
   (next-link [self key])
   (leaf [self prev]))
@@ -26,7 +27,7 @@
     (next-word
       [_ words]
       ;TODO not found case
-      (let [bag (leaf chain words)]
+      (let [bag (leaf chain (take-last (:size chain) words))]
            (rand-nth (bag/->seq bag)))))
 
 
@@ -38,6 +39,10 @@
     
     (leaf [self words]
       (get self (last words)))
+    (add [self ks v] 
+         (let [k (first ks)
+               bag (next-link self k)]
+              (assoc self k (bag/put bag v))))
     (acc 
       [self words]
       (let [prev (ref (first words))]
@@ -50,31 +55,29 @@
 
 (defn make-bc1 [] (BagChain1.))
 
-(defrecord BagChain2 []
+(defrecord BagChain2 [size create-link-fun]
   Chain
     (start-chain [self] 
       (let [link (rand-nth (keys self))]
            (vec (cons link (start-chain (get self link))) )))
     (next-link [self key]
-      (get self key (make-bc1)))
+      (get self key (create-link-fun)))
     (leaf [self words]
-      (let [key (last (butlast words))
-            chain1 (next-link self key)]
-           (get chain1 (last words))))
+      (let [link (next-link self (first words))]
+           (leaf link (rest words))))
+    (add [self ks v]
+         (let [k (first ks)
+               chain (next-link self k)]
+               (assoc self k (add chain (rest ks) v))))
     (acc 
-      [self words]
-      (let [prev1 (ref (second words))
-            prev2 (ref (first words))]
+      [self keys]
+      (let [ks (ref (take size keys))]
            (fn [self follower]
-             (let [prev1* (deref prev1)
-                   prev2* (deref prev2)]
+             (let [ks* (deref ks)]
                   (dosync 
-                    (ref-set prev2 prev1*)
-                    (ref-set prev1 follower)
-                    (let [chain1 (next-link self prev2*)
-                          bag (next-link chain1 prev1*)]
-                         (assoc self prev2* (assoc chain1 prev1* (bag/put bag follower))))))))))
+                    (ref-set ks (conj (vec (rest ks*)) follower))
+                    (add self ks* follower)))))))
 
 (defn words->vocab
    [words]
-   (add-all (BagVocab. (BagChain2.)) words))
+   (add-all (BagVocab. (BagChain2. 2 make-bc1)) words))
