@@ -3,38 +3,35 @@
             [clojure.contrib.math :as math]))
 
 (defprotocol Vocab
-  (add-all [self words])
+  (add-all [self words-to-add])
   (start [self])
-  (words [self])
-  (next-word [self words]))
+  (next-word [self prev-words]))
 
-(defn acc 
+(defn- drop-first-add-to-end [es e]
+  ; TODO promote to library
+  (conj (vec (rest es)) e))
+
+(defn- make-acc 
   [initials]
   (let [ks (ref initials)]
        (fn [bag-map v]
          (let [ks* (deref ks)
                bag (get bag-map ks* (bag/create))]
               (dosync 
-                (ref-set ks (conj (vec (rest ks*)) v))
+                (ref-set ks (drop-first-add-to-end ks* v))
                 (assoc bag-map ks* (bag/put bag v)))))))
 
 (deftype BagVocab [bag-map size]
   Vocab
     (add-all [_ words]
-      (let [init (take size words)
-            rst (take 5 (drop size words))]
       (BagVocab. 
-        (reduce 
-          (acc (take size words)) 
-          bag-map
-          (drop size words))
-        size)))
+        (reduce (make-acc (take size words)) bag-map (drop size words))
+        size))
     (start [_] (rand-nth (keys bag-map)))
-    (words [_] (vals bag-map))
     (next-word
-      [_ words]
+      [_ prevs]
       ;TODO not found case
-      (let [bag (get bag-map (take-last size words))]
+      (let [bag (get bag-map (take-last size prevs))]
            (rand-nth (bag/->seq bag)))))
 
 (defn words->vocab
