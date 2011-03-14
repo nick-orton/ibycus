@@ -7,7 +7,7 @@
              [ibycus.vocab :as vocab]))
 
 (defn- tokenize [string]
-  (str-utils2/split string #"[\s+\d*\(\),:\"\]\[\.*;?!#]"))
+  (str-utils2/split string #"[\s+\d*\(\),:\"\]\[*;?!#]"))
 
 (def forbidden-words 
   #{"ll" "ii" "iii" "iv" "v" "vii" "viii" "ix" "x" "xi" "xii" "xiii" "xiv"
@@ -19,12 +19,18 @@
   [word]
   (str-utils/re-gsub #"--" "" word))
 
+;user=> (flatten (map #(re-partition #"\." %) ["boo" "boo."]))
+;("boo" "boo" ".")
+(defn- extract-period-ends [words]
+ (flatten (map #(str-utils/re-partition #"\." %) words)))
+
 (defn string->words
   [s]
   (->> 
     (tokenize s)
     (filter #(not (empty? %)))
     (map clean-word)
+    (extract-period-ends)
     (filter #(nil? (forbidden-words %)))
     (map contrib-str/lower-case)))
 
