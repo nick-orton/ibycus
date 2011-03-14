@@ -16,14 +16,21 @@
     (filter #(nil? (#{"ll"} %)))
     (map contrib-str/lower-case)))
 
-(defn file->vocab
+(defn- file->words
   [file]
-  (->
+  (-> 
     (files/file->string file)
-    (string->words)
+    (string->words)))
+
+(defn files->vocab
+  [files]
+  (->
+    (map #(file->words %) files)
+    (flatten)
     (vocab/words->vocab )))
+
 
 (def vocab-files (files/dir->files "vocab"))
 
-(def v (file->vocab (first vocab-files)))
+(def v (files->vocab vocab-files))
 
