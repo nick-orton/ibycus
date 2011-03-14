@@ -4,10 +4,13 @@
              [clojure.contrib.string :as contrib-str]
              [ibycus.vocab :as vocab]))
 
+(defn- tokenize [string]
+  (str-utils/split string #"[\s+\d*\(\),:\"\]\[\.*;?'!]"))
+
 (defn string->words
   [s]
   (->> 
-    (str-utils/split s #"[\s+\d*\(\),(--):\"\]\[\.*;?'!]")
+    (tokenize s)
     (filter #(not (empty? %)))
     (filter #(nil? (#{"ll"} %)))
     (map contrib-str/lower-case)))
