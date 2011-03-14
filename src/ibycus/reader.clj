@@ -6,7 +6,7 @@
              [ibycus.vocab :as vocab]))
 
 (defn- tokenize [string]
-  (str-utils/split string #"[\s+\d*\(\),:\"\]\[\.*;?'!]"))
+  (str-utils/split string #"[\s+\d*\(\),:\"\]\[\.*;?!]"))
 
 (defn string->words
   [s]
