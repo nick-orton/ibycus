@@ -13,5 +13,6 @@
   (assert-tokenization ["a" "bc"] "a.. bc")
   (assert-tokenization ["a" "bc"] "a ll bc")
   (assert-tokenization ["cost" "cutting"] "cost:cutting")
-         
+  (assert-tokenization ["cost" "cutting"] "cost[cutting]")
+  (assert-tokenization ["cost" "cutting"] "cost(cutting)")
          )
