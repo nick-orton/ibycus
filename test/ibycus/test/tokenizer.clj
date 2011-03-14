@@ -1,5 +1,5 @@
-(ns ibycus.test.reader
-  (:use [ibycus.reader] :reload-all)
+(ns ibycus.test.tokenizer
+  (:use [ibycus.tokenizer] :reload-all)
   (:use [clojure.test])
   (:require [techne.bag :as bag]))
 
@@ -11,6 +11,7 @@
   (assert-tokenization ["a" "bc"] "a 123  bc")
   (assert-tokenization ["a" "bc"] "a (bc)")
   (assert-tokenization ["a" "bc"] "a.. bc")
+  (assert-tokenization ["a" "." "bc"] "a. bc")
   (assert-tokenization ["a" "bc"] "--a-- bc")
   (assert-tokenization ["a" "bc"] "a ll bc")
   (assert-tokenization ["cost" "cutting"] "cost:cutting")
