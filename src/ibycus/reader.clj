@@ -1,4 +1,5 @@
  (ns ibycus.reader
+   (:import (java.io File))
    (:require [clojure.contrib.str-utils2 :as str-utils]
              [techne.files :as files]
              [clojure.contrib.string :as contrib-str]
@@ -22,4 +23,7 @@
     (string->words)
     (vocab/words->vocab )))
 
-(def v (file->vocab "vocab/hesiod.txt"))
+(def vocab-files (files/dir->files "vocab"))
+
+(def v (file->vocab (first vocab-files)))
+
