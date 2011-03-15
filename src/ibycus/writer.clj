@@ -11,7 +11,7 @@
            (recur (inc i) poem*)
            poem*))))
 
-(defn- squeeze-back-periods
+(defn- attach-punctuation-marks-to-the-word-before
   [words ]
   (loop [out []
          current (first words)
@@ -30,6 +30,7 @@
   [vocab size]
   (->>
     (vocab->poem-word-list vocab size)
-    (squeeze-back-periods)
+    (attach-punctuation-marks-to-the-word-before)
+    (filter #(not (= "." %)))
     (interpose " " )
     (apply str)))
