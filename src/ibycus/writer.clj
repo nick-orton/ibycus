@@ -1,4 +1,5 @@
 (ns ibycus.writer
+  (:gen-class)
   (:require  [clojure.contrib.str-utils2 :as str-utils2]
              [ibycus.reader :as reader]
              [ibycus.vocab :as vocab]))
@@ -64,3 +65,7 @@
 (defn write
   ([size] (write-poem size))
   ([] (write-sentence)))
+
+(declare main) 
+
+(defn -main [& args] (write args))
