@@ -1,6 +1,9 @@
 (ns ibycus.writer
   (:require  [clojure.contrib.str-utils2 :as str-utils2]
+             [ibycus.reader :as reader]
              [ibycus.vocab :as vocab]))
+
+(def puncts #{"." "?" "!"})
 
 (defn- vocab->poem-word-list
   [vocab size]
@@ -12,12 +15,12 @@
            (recur (inc i) poem*)
            poem*))))
 
-(defn- vocab->sentance 
+(defn- vocab->sentence 
   [vocab]
   (loop [poem (vocab/start vocab)]
     (let [word (vocab/next-word vocab poem)
           poem* (conj poem word)]
-         (if (#{"." "?" "!"} word)
+         (if (puncts word)
            poem*
            (recur poem*)))))
  
@@ -31,25 +34,27 @@
      out
      (let [next (first others)
            after (rest others)]
-          (if (#{"." "?" "!"} next)
+          (if (puncts next)
             (if (empty? after)
               (conj out (str current next))
               (recur (conj out (str current next)) (str-utils2/capitalize (first after)) (rest after)))
             (recur (conj out current) next after)))))) 
 
+(defn- words->string
+  [words]
+  (apply str (interpose " " words)))
+
 (defn write-poem
-  [vocab size]
+  [size]
   (->>
-    (vocab->poem-word-list vocab size)
+    (vocab->poem-word-list reader/v size)
     (attach-punctuation-marks-to-the-word-before)
     (filter #(not (= "." %)))
-    (interpose " " )
-    (apply str)))
+    (words->string)))
 
-(defn write-sentance
-  [vocab]
+(defn write-sentence
+  []
   (->>
-    (vocab->sentance vocab)
-    (interpose " " )
-    (apply str)
+    (vocab->sentence reader/v)
+    (words->string)
     (str-utils2/capitalize)))
