@@ -1,5 +1,6 @@
 (ns ibycus.writer
-  (require [ibycus.vocab :as vocab]))
+  (:require  [clojure.contrib.str-utils2 :as str-utils2]
+             [ibycus.vocab :as vocab]))
 
 (defn- vocab->poem-word-list
   [vocab size]
@@ -23,7 +24,7 @@
           (if (#{"." "?" "!"} next)
             (if (empty? after)
               (conj out (str current next))
-              (recur (conj out (str current next)) (first after) (rest after)))
+              (recur (conj out (str current next)) (str-utils2/capitalize (first after)) (rest after)))
             (recur (conj out current) next after)))))) 
 
 (defn write-poem
