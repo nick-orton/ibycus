@@ -12,6 +12,16 @@
            (recur (inc i) poem*)
            poem*))))
 
+(defn- vocab->sentance 
+  [vocab]
+  (loop [poem (vocab/start vocab)]
+    (let [word (vocab/next-word vocab poem)
+          poem* (conj poem word)]
+         (if (#{"." "?" "!"} word)
+           poem*
+           (recur poem*)))))
+ 
+
 (defn- attach-punctuation-marks-to-the-word-before
   [words ]
   (loop [out []
@@ -35,3 +45,11 @@
     (filter #(not (= "." %)))
     (interpose " " )
     (apply str)))
+
+(defn write-sentance
+  [vocab]
+  (->>
+    (vocab->sentance vocab)
+    (interpose " " )
+    (apply str)
+    (str-utils2/capitalize)))
