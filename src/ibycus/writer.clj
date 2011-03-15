@@ -42,9 +42,12 @@
 
 (defn- words->string
   [words]
-  (apply str (interpose " " words)))
+  (->>
+    (interpose " " words)
+    (apply str)
+    (str-utils2/capitalize)))
 
-(defn write-poem
+(defn- write-poem
   [size]
   (->>
     (vocab->poem-word-list reader/v size)
@@ -52,9 +55,12 @@
     (filter #(not (= "." %)))
     (words->string)))
 
-(defn write-sentence
+(defn- write-sentence
   []
   (->>
     (vocab->sentence reader/v)
-    (words->string)
-    (str-utils2/capitalize)))
+    (words->string)))
+
+(defn write
+  ([size] (write-poem size))
+  ([] (write-sentence)))
