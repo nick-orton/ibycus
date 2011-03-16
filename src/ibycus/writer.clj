@@ -22,7 +22,7 @@
     (let [word (vocab/next-word vocab poem)
           poem* (conj poem word)]
          (if (puncts word)
-           poem*
+           (conj (vec (butlast poem)) (str (last poem) word))
            (recur poem*)))))
  
 
