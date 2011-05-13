@@ -1,7 +1,6 @@
 (ns ibycus.test.tokenizer
   (:use [ibycus.tokenizer] :reload-all)
-  (:use [clojure.test])
-  (:require [techne.bag :as bag]))
+  (:use [clojure.test]))
 
 (defn- assert-tokenization [tokens string]
   (is (= tokens (string->words string))))
