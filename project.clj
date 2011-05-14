@@ -4,4 +4,4 @@
                  [org.clojure/clojure-contrib "1.2.0"]
                  [techne "0.6.1"]]
   :keep-non-project-classes true
-  :main ibycus.writer)
+  :main ibycus.main)

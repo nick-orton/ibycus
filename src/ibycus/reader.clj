@@ -16,8 +16,6 @@
     (flatten)
     (words->vocab )))
 
-
-(def vocab-files (dir->files "vocab"))
-
-(def v (files->vocab vocab-files))
+(defn create-from-dir [dir] 
+  (files->vocab (dir->files dir)))
 

@@ -1,7 +1,5 @@
 (ns ibycus.writer
-  (:gen-class)
   (:use [clojure.contrib.str-utils2 :only [capitalize]])
-  (:use [ibycus.reader :only [v]])
   (:use [ibycus.vocab :only [start next-word]]))
 
 
@@ -51,28 +49,26 @@
     (apply str)
     (capitalize)))
 
-;TODO move write-poem and write-sentance into a Protocol Poet.
-;TODO create a poet that takes a vocabulary
-;move reader's v fun into a seperate file that creates the vocabulary and poet
-;  and does the write method
-(defn- write-poem
-  [size]
-  (->>
-    (vocab->poem-word-list v size)
-    (attach-punctuation-marks-to-the-word-before)
-    (filter #(not (= "." %)))
-    (words->string)))
+(defprotocol Poet
+  "A poet can write poems of a given word count, or a poetic sentence of 
+   arbitrary length"
+  (write-poem [self size])
+  (write-sentence [self]))
 
-(defn- write-sentence
-  []
-  (->>
-    (vocab->sentence v)
-    (words->string)))
+(deftype Ibycus [vocab]
+  Poet
+  (write-poem
+    [_ size]
+    (->>
+      (vocab->poem-word-list vocab size)
+      (attach-punctuation-marks-to-the-word-before)
+      (filter #(not (= "." %)))
+      (words->string)))
 
-(defn write
-  ([size] (write-poem size))
-  ([] (write-sentence)))
+  (write-sentence
+    [_]
+    (->>
+      (vocab->sentence vocab)
+      (words->string))))
 
-(declare main) 
-
-(defn -main [& args] (write args))
+(defn ibycus [vocab] (Ibycus. vocab))
