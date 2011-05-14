@@ -1,6 +1,5 @@
 (ns ibycus.vocab
-  (:require [techne.bag :as bag]
-            [clojure.contrib.math :as math]))
+  (:use [techne.bag :only [put create ->seq]]))
 
 (defprotocol Vocab
   (add-all [self words-to-add])
@@ -8,7 +7,6 @@
   (next-word [self prev-words]))
 
 (defn- drop-first-add-to-end [es e]
-  ; TODO promote to library
   (conj (vec (rest es)) e))
 
 (defn- make-acc 
@@ -16,10 +14,10 @@
   (let [ks (ref initials)]
        (fn [bag-map v]
          (let [ks* (deref ks)
-               bag (get bag-map ks* (bag/create))]
+               bag (get bag-map ks* (create))]
               (dosync 
                 (ref-set ks (drop-first-add-to-end ks* v))
-                (assoc bag-map ks* (bag/put bag v)))))))
+                (assoc bag-map ks* (put bag v)))))))
 
 (deftype BagVocab [bag-map size]
   Vocab
@@ -32,7 +30,7 @@
       [_ prevs]
       ;TODO not found case
       (let [bag (get bag-map (take-last size prevs))]
-           (rand-nth (bag/->seq bag)))))
+           (rand-nth (->seq bag)))))
 
 (defn words->vocab
    [words]
