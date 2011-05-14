@@ -1,12 +1,11 @@
  (ns ibycus.tokenizer
    (:import (java.io File))
-   (:require [clojure.contrib.str-utils2 :as str-utils2]
-             [clojure.contrib.str-utils :as str-utils]
-             [clojure.contrib.string :as contrib-str]
-             ))
+   (:use [clojure.contrib.str-utils2 :only [split]])
+   (:use [clojure.contrib.str-utils :only [re-gsub re-partition]])
+   (:use [clojure.contrib.string :only [lower-case]]))
 
 (defn- tokenize [string]
-  (str-utils2/split string #"[\s+\d*\(\),:\"\]\[*;#]"))
+  (split string #"[\s+\d*\(\),:\"\]\[*;#]"))
 
 (def forbidden-words 
   #{"ll" "ii" "iii" "iv" "v" "vii" "viii" "ix" "x" "xi" "xii" "xiii" "xiv"
@@ -16,10 +15,10 @@
                         
 (defn- clean-word
   [word]
-  (str-utils/re-gsub #"--|\.\.+" "" word))
+  (re-gsub #"--|\.\.+" "" word))
 
 (defn- extract-period-ends [words]
- (flatten (map #(str-utils/re-partition #"\.|\?|!" %) words)))
+ (flatten (map #(re-partition #"\.|\?|!" %) words)))
 
 (defn string->words
   [s]
@@ -29,4 +28,4 @@
     (map clean-word)
     (extract-period-ends)
     (filter #(nil? (forbidden-words %)))
-    (map contrib-str/lower-case)))
+    (map lower-case)))
