@@ -1,6 +1,6 @@
-# ibycus
+# Ἴβυκος
 
-FIXME: write description
+Ibycus is a tool for generating ancient epic poetry via a Markov Chain
 
 ## Usage
 
