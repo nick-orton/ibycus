@@ -1,5 +1,4 @@
  (ns ibycus.reader
-   (:import (java.io File))
    (:use [techne.files :only [file->string dir->files]])
    (:use [ibycus.tokenizer :only [string->words]])
    (:use [ibycus.vocab :only [words->vocab]]))
