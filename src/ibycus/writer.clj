@@ -55,7 +55,7 @@
   (write-poem [self size])
   (write-sentence [self]))
 
-(deftype Ibycus [vocab]
+(deftype VocabUsingPoet [vocab]
   Poet
   (write-poem
     [_ size]
@@ -71,4 +71,4 @@
       (vocab->sentence vocab)
       (words->string))))
 
-(defn ibycus [vocab] (Ibycus. vocab))
+(defn create-poet [vocab] (VocabUsingPoet. vocab))

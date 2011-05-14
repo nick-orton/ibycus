@@ -1,10 +1,10 @@
 (ns ibycus.main
-  (:use [ibycus.writer :only [ibycus write-poem write-sentence]]) 
+  (:use [ibycus.writer :only [create-poet write-poem write-sentence]]) 
   (:use [ibycus.reader :only [create-from-dir]]))
 
-
-(def ib (ibycus (create-from-dir "vocab")))
+(def vocab (create-from-dir "vocab"))
+(def ibycus (create-poet vocab))
 
 (defn write
-  ([size] (write-poem ib size))
-  ([] (write-sentence ib)))
+  ([size] (write-poem ibycus size))
+  ([] (write-sentence ibycus)))

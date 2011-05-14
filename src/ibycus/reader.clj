@@ -9,7 +9,7 @@
     (file->string file)
     (string->words)))
 
-(defn files->vocab
+(defn- files->vocab
   [files]
   (->
     (map #(file->words %) files)
