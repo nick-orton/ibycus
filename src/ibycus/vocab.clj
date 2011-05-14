@@ -12,27 +12,27 @@
 (defn- make-acc 
   [initials]
   (let [ks (ref initials)]
-       (fn [bag v]
+       (fn [data v]
          (let [ks* (deref ks)
-               bag (get bag ks* (create))]
+               bag (get data ks* (create))]
               (dosync 
                 (ref-set ks (drop-first-add-to-end ks* v))
-                (assoc bag ks* (put bag v)))))))
+                (assoc data ks* (put bag v)))))))
 
 ;TODO serialize with print-dup
 ;http://clojuredocs.org/clojure_core/clojure.core/*print-dup*
 ; - depends on bag being serializable
-(deftype BagVocab [bag size]
+(deftype BagVocab [data size]
   Vocab
     (add-all [_ words]
       (BagVocab. 
-        (reduce (make-acc (take size words)) bag (drop size words))
+        (reduce (make-acc (take size words)) data (drop size words))
         size))
-    (start [_] (rand-nth (keys bag)))
+    (start [_] (rand-nth (keys data)))
     (next-word
       [_ prevs]
       ;TODO not found case
-      (let [bag (get bag (take-last size prevs))]
+      (let [bag (get data (take-last size prevs))]
            (rand-nth (->seq bag)))))
 
 (defn words->vocab
