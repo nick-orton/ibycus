@@ -8,7 +8,8 @@ Ibycus is a tool for generating ancient epic poetry via a Markov Chain
     #'ibycus.main/ibycus
 
     ibycus.main=> (write-sentence ibycus)
-    "Of th' eluded foe in the broad buckler half the weapon stood fix'd was the point but broken was the wood."
+    "Of th' eluded foe in the broad buckler half the weapon stood fix'd was the
+     point but broken was the wood."
 
     ibycus.main=> (write-poem ibycus 100)
     "Erebus because of his beauty to be amongst the deathless gods you and your
