@@ -23,10 +23,12 @@ Ibycus is a tool for generating ancient epic poetry via a Markov Chain
 
 ## Installation
 
-FIXME: write
+###leiningen
+
+    [ibycus "0.0.0"]
 
 ## License
 
-Copyright (C) 2010 FIXME
+Copyright (C) 2011 Nick Orton
 
 Distributed under the Eclipse Public License, the same as Clojure.
