@@ -1,4 +1,4 @@
-(defproject ibycus "0.0.0"
+(defproject ibycus "0.1.0-SNAPSHOT"
   :description "writes epic verse via markov chain"
   :dev-dependencies [[lein-clojars "0.6.0"]
                      [marginalia "0.5.1"]]
